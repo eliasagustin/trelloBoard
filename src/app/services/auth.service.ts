@@ -12,7 +12,7 @@ import { environment } from 'src/environments/environment';
 export class AuthService {
   private supabase: SupabaseClient;
   private _currentUser: BehaviorSubject<boolean | User | any> = new BehaviorSubject(null);
-
+  
   constructor(private router: Router) { 
     this.supabase = createClient(
       environment.supabaseUrl,
