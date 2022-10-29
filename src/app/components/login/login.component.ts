@@ -10,7 +10,7 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class LoginComponent implements OnInit {
 
-  email = 'isacc.shain@fallinhay.com';
+  email = 'eliasagustin@gmail.com';
   linkSuccess = false;
 
   constructor(private auth: AuthService,
