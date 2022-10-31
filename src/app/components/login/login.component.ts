@@ -15,7 +15,13 @@ export class LoginComponent implements OnInit {
 
   constructor(private auth: AuthService,
     private spinner: NgxSpinnerService,
-    private router: Router) { }
+    private router: Router) { 
+      this.auth.currentUser.subscribe((user) => {
+        if (user) {
+          this.router.navigateByUrl("/workspace", {replaceUrl:true});
+        }
+      });
+    }
 
   ngOnInit(): void {
   }
@@ -23,7 +29,7 @@ export class LoginComponent implements OnInit {
   async signIn() {
     this.spinner.show();
     const result = await this.auth.signInWithEmail(this.email);
-    console.log("~ file: login.component.ts ~ line 26 ~ LoginComponent ~ signIn ~ result", result);
+    // console.log(' file: login.component.ts ~ line 26 ~ LoginComponent ~ signIn ~ result', result);
 
     this.spinner.hide();
     if (!result.error) {
