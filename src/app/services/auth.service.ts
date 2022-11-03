@@ -1,8 +1,12 @@
+import type {  UserResponse } from '@supabase/supabase-js'
+
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { createClient, SupabaseClient, User } from '@supabase/supabase-js';
 
-import { BehaviorSubject } from 'rxjs';
+import { BehaviorSubject, from } from 'rxjs';
+
+
 
 import { environment } from 'src/environments/environment';
 
@@ -20,10 +24,20 @@ export class AuthService {
     );
 
     const user = this.supabase.auth.getUser();
-    console.log('user: ',user);
+
+    user.then((datos) => {
+      console.log('success: ', datos.data.user);
+      //console.log('error: ', datos.error?.message);
+    })
+    .catch((error) => {
+      console.log('error: ', error);
+    })
+    
 
     if (user) {
       this._currentUser.next(user);
+      console.log('user: ', user);
+      
     } else {
       this._currentUser.next(false);
     }
@@ -32,13 +46,22 @@ export class AuthService {
       console.log('event: ', event);
       console.log('session: ', session);
       
-      if (event === 'SIGNED_IN'){
-        this._currentUser.next(session?.user)
+      if (event == 'SIGNED_IN'){
+        this._currentUser.next(session!.user)
       } else {
         this._currentUser.next(false);
-        this.router.navigateByUrl("/", { replaceUrl: true });
+        this.router.navigateByUrl('/', { replaceUrl: true });
       }
     });
+  }
+
+  public async getUser1(): Promise<User | null> {
+    const data = await this.supabase.auth.getUser();
+    return data.data.user
+  }
+  public async getUser2(): Promise<string | any> {
+    const data = await (await this.supabase.auth.getUser()).data.user?.email;
+    return data
   }
 
   signInWithEmail(email: string){
@@ -54,4 +77,5 @@ export class AuthService {
   get currentUser() {
     return this._currentUser.asObservable();
   }
+
 }
