@@ -19,8 +19,12 @@ export class LoginComponent implements OnInit {
     private router: Router
   ) {
     this.auth.currentUser.subscribe((user) => {
-      if (user) {
+      //console.log ('user login component: ', user);
+      if (user !== null) {
+        //console.log('No redirecciona sin usuario')
         this.router.navigateByUrl('/workspace', { replaceUrl: true })
+      } else {
+        //this.router.navigateByUrl('/workspace', { replaceUrl: true })
       }
     })
   }

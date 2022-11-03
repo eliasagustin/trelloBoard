@@ -23,24 +23,21 @@ export class AuthService {
       environment.supabaseKey
     );
 
-    const user = this.supabase.auth.getUser();
-
-    user.then((datos) => {
-      console.log('success: ', datos.data.user);
+    const user = this.supabase.auth.getUser().then((datos) => {
+      //console.log('success, user: ', datos.data.user);
+      this._currentUser.next(datos.data.user);
+      if(datos.data.user) {
+        this._currentUser.next(datos.data.user);
+      } else {
+        this._currentUser.next(false);
+      }
+      return datos.data.user
       //console.log('error: ', datos.error?.message);
     })
     .catch((error) => {
       console.log('error: ', error);
+      return error
     })
-    
-
-    if (user) {
-      this._currentUser.next(user);
-      console.log('user: ', user);
-      
-    } else {
-      this._currentUser.next(false);
-    }
 
     this.supabase.auth.onAuthStateChange((event, session) => {
       console.log('event: ', event);
