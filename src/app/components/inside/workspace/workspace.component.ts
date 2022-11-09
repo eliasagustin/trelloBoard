@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
+import { DataService } from 'src/app/services/data.service';
 
 @Component({
   selector: 'app-workspace',
@@ -8,11 +10,31 @@ import { AuthService } from 'src/app/services/auth.service';
 })
 export class WorkspaceComponent implements OnInit {
 
-  constructor(private auth: AuthService) { }
+  boards: any[] = [];
+  user = this.auth.currentUser;
 
-  ngOnInit(): void {
+  constructor(private auth: AuthService,
+              private dataService: DataService,
+              private router: Router) { }
+
+  async ngOnInit(): Promise<void> {
+    this.boards = await this.dataService.getBoards();
+    console.log("this.boards", this.boards)
   }
 
+  async startBoard() {
+    await this.dataService.startBoard();
+    this.boards = await this.dataService.getBoards();
+    //console.log("this.data", data)
+    
+    if (this.boards.length > 0) {
+      const newBoard = this.boards.pop();
+      if (newBoard.boards) {
+        this.router.navigateByUrl(`/workspace/${newBoard.boards.id}`);
+      }
+    }
+  }
+  
   signOut() {
     this.auth.logout();
   }

@@ -40,8 +40,8 @@ export class AuthService {
     })
 
     this.supabase.auth.onAuthStateChange((event, session) => {
-      console.log('event: ', event);
-      console.log('session: ', session);
+      // console.log('event: ', event);
+      // console.log('session: ', session);
       
       if (event == 'SIGNED_IN'){
         this._currentUser.next(session!.user)
@@ -51,15 +51,15 @@ export class AuthService {
       }
     });
   }
-
-  public async getUser1(): Promise<User | null> {
-    const data = await this.supabase.auth.getUser();
-    return data.data.user
-  }
-  public async getUser2(): Promise<string | any> {
-    const data = await (await this.supabase.auth.getUser()).data.user?.email;
-    return data
-  }
+  // Borrar
+  // public async getUser1(): Promise<User | null> {
+  //   const data = await this.supabase.auth.getUser();
+  //   return data.data.user
+  // }
+  // public async getUser2(): Promise<string | any> {
+  //   const data = await (await this.supabase.auth.getUser()).data.user?.email;
+  //   return data
+  // }
 
   signInWithEmail(email: string){
     return this.supabase.auth.signInWithOtp({
